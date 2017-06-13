@@ -60,7 +60,7 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
     time.sleep(sleep_time)
 
 # file open date/yyyy/mmdd.txt
-filepath = 'data/'+target_day.strftime("%Y/%m%d.txt")
+filepath = '../data/'+target_day.strftime("%Y/%m%d.txt")
 
 total = 0
 f = open(filepath , 'w')
