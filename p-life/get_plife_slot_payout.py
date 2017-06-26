@@ -10,7 +10,8 @@ import random
 
 # SLOT NO
 SLOT_NO_START = 4001
-SLOT_NO_END = 4266
+# SLOT_NO_END = 4266
+SLOT_NO_END = 4001
 
 # 前日
 BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
@@ -34,6 +35,8 @@ print(target_day.strftime("%Y-%m-%d %H:%M:%S"))
 # 何日前か？の算出
 target_days = (today - target_day).days
 
+# 実行時間計測
+start = time.time()
 
 # data 取得
 slots_payout = {}
@@ -42,16 +45,40 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
         slots_payout[i] = []
 
     target_url = BASE_URL % (target_days, i)
-    print(target_url)
+
+    print("get url:"+target_url)
     target_html = requests.get(target_url, headers=HEADERS).text
     root = lxml.html.fromstring(target_html)
-    if root.cssselect('#chart.data tbody td:last-child ')[0].text is not None:
+
+    # payoutの取得
+    if root.cssselect('#chart.data tbody td:last-child')[0].text is not None:
         payout = root.cssselect('#chart.data tbody td:last-child ')[0].text
     else:
         continue
 
+    # 総回転数の取得
+    if root.cssselect('.score-large .middle')[0].text is not None:
+        totalRotation = root.cssselect('.score-large .middle')[0].text
+    else:
+        continue
+    print("payout:"+payout)
+    print(root.cssselect('.score-large .middle')[0].text)
+    # 総回転数
+    #print(root.cssselect('#chart..score-large .middle')[0].text)
+
+#     if root.cssselect('#chart..score-large .middle lump')[5].text is not None:
+#         totalcount = root.cssselect('#chart.data tbody td:last-child ')[0].text
+#     else:
+#         continue
+
+#     payout('total count:'+totalcount)
+
+
     # 最終payout保存
-    slots_payout[i] = payout
+    slots_payout[i] = {
+        'payout' : payout,
+        'totalRotation':totalRotation
+    }
 
     # 負荷かけないようにsleepいれる
     sleep_time = random.uniform(0,1)
@@ -64,12 +91,22 @@ filepath = '../data/'+target_day.strftime("%Y/%m%d.txt")
 
 total = 0
 f = open(filepath , 'w')
-for k, v in slots_payout.items():
-    f.write("%d,%s\n" % (k, v));
-    # 店舗の全体の差枚数を求める
-    total = total + int(v)
 
-f.write("%s,%s\n" % ('total', total));
+# outout header
+f.write("%s,%s,%s\n" % ('lotno', 'payout', 'totalRotaion'))
+
+# output contents
+for k, v in slots_payout.items():
+    f.write("%d,%s,%s\n" % (k, str(v['payout']), str(v['totalRotation'])))
+    # 店舗の全体の差枚数を求める
+    total = total + int(v['totalRotation'])
+
+f.write("%s,%s\n" % ('total', total))
 f.close()
+
+
+# 実行時間出力
+elapsed_time = round(time.time() - start, 2)
+print ("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
 sys.exit()
