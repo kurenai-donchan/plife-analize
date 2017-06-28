@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+# ----------------------------------------------
+# スロットの指定日付の各台番ごとにデータを取得する
+# ----------------------------------------------
+
 import sys
 import lxml.html
 import requests
@@ -10,8 +14,8 @@ import random
 
 # SLOT NO
 SLOT_NO_START = 4001
-# SLOT_NO_END = 4266
-SLOT_NO_END = 4001
+SLOT_NO_END = 4266
+#SLOT_NO_END = 4001
 
 # 前日
 BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
