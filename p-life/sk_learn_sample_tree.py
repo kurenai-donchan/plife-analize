@@ -9,6 +9,10 @@ def main():
     variables = ['x1', 'x2']
     # 決定木の分類器を生成
     clf = tree.DecisionTreeClassifier()
+
+    print(data[variables])
+    print(data['x3'])
+
     # 分類器にサンプルデータを入れて学習(目的変数はx）
     clf = clf.fit(data[variables], data['x3'])
     # 学習結果を出力
