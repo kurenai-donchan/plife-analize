@@ -11,6 +11,7 @@ import datetime
 import codecs
 import sys
 import random
+import os.path
 
 def main():
 
@@ -27,36 +28,36 @@ def main():
         target_lot_no = 4001
     else:
         # 指定されていればそれを利用 YYYY-mm-ddの形式
-        target_lot_no = args[1]
+        target_lot_no = int(args[1])
 
     # file open date/yyyy/mmdd.txt
     filepath = '../data/lot/%d.txt' % target_lot_no
 
     total = 0
-    f = open(filepath , 'a')
+    with open(filepath , 'a') as f:
+        # 初回ならヘッダー追加
+        if not os.path.getsize(filepath):
+            # outout header
+            f.write("%s,%s,%s,%s,%s\n" % ('lotno', 'date','day','payout', 'totalRotaion'))
 
-    # outout header
-    #f.write("%s,%s,%s,%s,%s\n" % ('lotno', 'date','day','payout', 'totalRotaion'))
+        slots_payout = {}
+        # 過去分から取得
+        for i in reversed(range(DATE_START, DATE_END+1)):
 
-    slots_payout = {}
-    # 過去分から取得
-    for i in reversed(range(DATE_START, DATE_END+1)):
+            #今日の日付
+            today = datetime.datetime.today()
+            target_day = today - datetime.timedelta(days=i)
 
-        #今日の日付
-        today = datetime.datetime.today()
-        target_day = today - datetime.timedelta(days=i)
+            slotInfo = getSlotInfo(i, target_lot_no)
 
-        slotInfo = getSlotInfo(i, target_lot_no)
+            f.write("%s,%s,%s,%s,%s\n" % (target_lot_no, target_day.strftime("%Y-%m-%d"),target_day.strftime("%w"),slotInfo['payout'], slotInfo['totalRotation']))
 
-        f.write("%s,%s,%s,%s,%s\n" % (target_lot_no, target_day.strftime("%Y-%m-%d"),target_day.strftime("%w"),slotInfo['payout'], slotInfo['totalRotation']))
+            # 負荷かけないようにsleepいれる
+            sleep_time = random.uniform(0,2)
+            print('sleep:'+str(sleep_time))
+            time.sleep(sleep_time)
 
-        # 負荷かけないようにsleepいれる
-        sleep_time = random.uniform(0,1)
-        print('sleep:'+str(sleep_time))
-        time.sleep(sleep_time)
 
-    # 閉じる
-    f.close()
 
 
 # ----------------------------------------
