@@ -11,8 +11,9 @@ import datetime
 import codecs
 import sys
 import random
+from test.test_cmath import NAN
 
-# SLOT NO
+# SLOT NO 4001 - 4266
 SLOT_NO_START = 4001
 SLOT_NO_END = 4266
 #SLOT_NO_END = 4001
@@ -60,52 +61,52 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
     else:
         continue
 
+    rotation = None
     # 総回転数の取得
     if root.cssselect('.score-large .middle')[0].text is not None:
-        totalRotation = root.cssselect('.score-large .middle')[0].text
+        rotation = root.cssselect('.score-large .middle')[0].text
     else:
         continue
-    print("payout:"+payout)
-    print(root.cssselect('.score-large .middle')[0].text)
-    # 総回転数
-    #print(root.cssselect('#chart..score-large .middle')[0].text)
 
-#     if root.cssselect('#chart..score-large .middle lump')[5].text is not None:
-#         totalcount = root.cssselect('#chart.data tbody td:last-child ')[0].text
-#     else:
-#         continue
-
-#     payout('total count:'+totalcount)
-
+    print("payout:"+payout+' rotation:'+rotation)
 
     # 最終payout保存
     slots_payout[i] = {
         'payout' : payout,
-        'totalRotation':totalRotation
+        'rotation':rotation
     }
 
     # 負荷かけないようにsleepいれる
     sleep_time = random.uniform(0,1)
     print('sleep:'+str(sleep_time))
-    #time.sleep(sleep_time)
     time.sleep(sleep_time)
+
 
 # file open date/yyyy/mmdd.txt
 filepath = '../data/'+target_day.strftime("%Y/%m%d.txt")
 
-total = 0
+totalPayout = 0
+totalRotation = 0
 f = open(filepath , 'w')
 
 # outout header
-f.write("%s,%s,%s\n" % ('lotno', 'payout', 'totalRotaion'))
+f.write("%s,%s,%s\n" % ('lotno', 'payout', 'rotation'))
 
 # output contents
 for k, v in slots_payout.items():
-    f.write("%d,%s,%s\n" % (k, str(v['payout']), str(v['totalRotation'])))
+    f.write("%d,%s,%s\n" % (k, str(v['payout']), str(v['rotation'])))
     # 店舗の全体の差枚数を求める
-    total = total + int(v['totalRotation'])
+    #if (isinstance(v['payout'], ( int ))) :
+    if v['payout'][0]=='-' and v['payout'][1:].isdigit() or v['payout'].isdigit():
+        totalPayout = totalPayout + int(v['payout'])
 
-f.write("%s,%s\n" % ('total', total))
+    # 店舗総回転数を出す(稼働率)
+    if (v['rotation'].isdigit()) :
+        totalRotation = totalRotation + int(v['rotation'])
+
+print(totalPayout)
+f.write("%s,%s,%s\n" % ('total', str(totalPayout), str(totalRotation)))
+
 f.close()
 
 

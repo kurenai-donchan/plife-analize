@@ -1,3 +1,0 @@
-lotno,payout,total Rotaion
-4001,2778,3820
-total,3820
