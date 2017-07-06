@@ -6,6 +6,7 @@
 import pandas as pd
 import numpy as np
 import sys
+import random
 from sklearn import tree
 from sklearn.externals import joblib
 
@@ -23,7 +24,6 @@ def main():
     with open('graph.dot', 'w') as f:
         f = tree.export_graphviz(clf, out_file=f)
 
-    joblib.dump(clf, 'tree.learn')
 
 if __name__ == "__main__":
     main()

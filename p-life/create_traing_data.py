@@ -42,15 +42,15 @@ def main():
 def createTraningData(payout):
     # `payouをまとめる
     tmp_i = int(round(payout / 1000))
-    if (tmp_i > 5):
-        # 5000枚以上は5で統一
-        tmp_i = 5
-    if (tmp_i < 0 and tmp_i > -2):
-        # -0 -2 以内は-1で統一
-        tmp_i = -1
-    if (tmp_i <= -2):
+    if (tmp_i >= 3):
+        # 3000枚以上は1
+        tmp_i = 1
+    if (tmp_i > 0 and tmp_i < 3):
+        # 0 - 2000 以内は-1で統一
+        tmp_i = 0
+    if (tmp_i < 0):
         # -2 以下は-2で統一
-        tmp_i = -2
+        tmp_i = -1
 
     return tmp_i
 
