@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------
-# スロットの指定日付の各台番ごとにデータを取得する
+# 指定日付の台番ごとにデータを取得する
+# payoutを出力する
 # ----------------------------------------------
 
 import sys
@@ -12,13 +13,14 @@ import codecs
 import sys
 import random
 
+# 対象の大番号の範囲
 # SLOT NO 4001 - 4266
 SLOT_NO_START = 4001
 SLOT_NO_END = 4266
-#SLOT_NO_END = 4001
 
-# 前日
+# 取得先URL
 BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
+# SmartPhoneでの取得しかできない
 HEADERS = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
 #今日の日付
@@ -67,7 +69,7 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
     else:
         continue
 
-    print("payout:"+payout+' rotation:'+rotation)
+    print("Lot No:" + str(i) +  ",Payout:"+payout+',Rotation:'+rotation)
 
     # 最終payout保存
     slots_payout[i] = {
@@ -77,7 +79,7 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
 
     # 負荷かけないようにsleepいれる
     sleep_time = random.uniform(0,1)
-    print('sleep:'+str(sleep_time))
+    # print('sleep:'+str(sleep_time))
     time.sleep(sleep_time)
 
 

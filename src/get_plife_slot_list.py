@@ -5,6 +5,7 @@
 
 import codecs
 import datetime
+import sys
 
 import lxml.html
 import requests
@@ -37,4 +38,10 @@ def main():
     f.close()
     print("output:" + filepath);
 
-main()
+# ----------------------------------------
+# main 処理実行
+# ----------------------------------------
+if __name__ == "__main__":
+    main()
+
+sys.exit()
