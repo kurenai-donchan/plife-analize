@@ -57,24 +57,32 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
     root = lxml.html.fromstring(target_html)
 
     # payoutの取得
+    payout = ""
     if root.cssselect('#chart.data tbody td:last-child')[0].text is not None:
         payout = root.cssselect('#chart.data tbody td:last-child ')[0].text
-    else:
-        continue
 
-    rotation = None
     # 総回転数の取得
+    rotation = ""
     if root.cssselect('.score-large .middle')[0].text is not None:
         rotation = root.cssselect('.score-large .middle')[0].text
-    else:
-        continue
 
-    print("Lot No:" + str(i) +  ",Payout:"+payout+',Rotation:'+rotation)
+    # BBの取得
+    big = ""
+    if root.cssselect('.score-large .big')[0].text is not None:
+        big = root.cssselect('.score-large .big')[0].text
+
+    reg = ""
+    if root.cssselect('.score-large .reg')[0].text is not None:
+        reg = root.cssselect('.score-large .reg')[0].text
+
+    print("No:" + str(i) +  ",Payout:"+payout+',Rotation:'+rotation,",BB:"+big+",RB:"+reg)
 
     # 最終payout保存
     slots_payout[i] = {
         'payout' : payout,
-        'rotation':rotation
+        'rotation':rotation,
+        'big':big,
+        'reg':reg
     }
 
     # 負荷かけないようにsleepいれる
@@ -84,20 +92,21 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
 
 
 # file open date/yyyy/mmdd.txt
-filepath = '../data/'+target_day.strftime("%Y/%m%d.txt")
+filepath = '../data/'+target_day.strftime("%Y/%m%d_%w.txt")
 
 totalPayout = 0
 totalRotation = 0
 f = open(filepath , 'w')
 
 # outout header
-f.write("%s,%s,%s\n" % ('lotno', 'payout', 'rotation'))
+f.write("%s,%s,%s,%s,%s\n" % ('No', 'Payout', 'Rotation', 'Big', 'Reg'))
 
 # output contents
 for k, v in slots_payout.items():
-    f.write("%d,%s,%s\n" % (k, str(v['payout']), str(v['rotation'])))
+    # 一行出力
+    f.write("%d,%s,%s,%s,%s\n" % (k, str(v['payout']), str(v['rotation']), str(v['big']), str(v['reg'])))
+
     # 店舗の全体の差枚数を求める
-    #if (isinstance(v['payout'], ( int ))) :
     if v['payout'][0]=='-' and v['payout'][1:].isdigit() or v['payout'].isdigit():
         totalPayout = totalPayout + int(v['payout'])
 
@@ -106,7 +115,7 @@ for k, v in slots_payout.items():
         totalRotation = totalRotation + int(v['rotation'])
 
 print(totalPayout)
-f.write("%s,%s,%s\n" % ('total', str(totalPayout), str(totalRotation)))
+f.write("%s,%s,%s,-,-\n" % ('total', str(totalPayout), str(totalRotation)))
 
 f.close()
 
