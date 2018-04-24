@@ -28,7 +28,7 @@ def main():
         target_lot_no = int(args[1])
 
     # file open date/yyyy/mmdd.txt
-    filepath = '../data/lot/%d.txt' % target_lot_no
+    filepath = '../../data/lot/%d.txt' % target_lot_no
 
     total = 0
     with open(filepath, 'a') as f:

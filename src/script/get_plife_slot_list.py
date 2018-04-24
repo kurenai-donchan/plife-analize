@@ -23,7 +23,7 @@ def main():
 
     root = lxml.html.fromstring(target_html)
 
-    filepath = '../data/slot_list/%s.txt' % today.strftime("%Y%m%d")
+    filepath = '../../data/slot_list/%s.txt' % today.strftime("%Y%m%d")
     f = codecs.open(filepath, 'w', 'utf-8')
 
     i = 1

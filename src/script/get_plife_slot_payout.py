@@ -92,7 +92,7 @@ for i in range(SLOT_NO_START, SLOT_NO_END+1):
 
 
 # file open date/yyyy/mmdd.txt
-filepath = '../data/'+target_day.strftime("%Y/%m%d_%w.txt")
+filepath = '../../data/'+target_day.strftime("%Y/%m%d_%w.txt")
 
 totalPayout = 0
 totalRotation = 0
