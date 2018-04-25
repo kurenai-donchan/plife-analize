@@ -1,4 +1,4 @@
-lotno,payout,rotation
+No,Payout,Rotation
 4001,-1927,2266
 4002,2931,1187
 4003,5058,1005

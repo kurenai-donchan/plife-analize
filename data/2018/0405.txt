@@ -1,4 +1,4 @@
-lotno,payout,rotation
+No,Payout,Rotation
 4001,-861,2019
 4002,-2494,2940
 4003,-2193,1660
