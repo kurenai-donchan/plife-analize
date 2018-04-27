@@ -1,10 +1,15 @@
 # -*- coding:utf-8 -*-
 
 from bottle import route, run, template, static_file
+import os
 
 
 @route('/')
-def hello(name='This is test by takako'):
+def index(name='This is test by takako'):
+    targetdir='../../data/2018/'
+    files = os.listdir(targetdir)
+    print("test")
+
     return template('index', name=name)
 
 

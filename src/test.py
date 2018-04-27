@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------
-# python 関数郡
+# Test
 # ----------------------------------------------
-import os
 
-def touch(path):
-    with open(path, 'a'):
-        os.utime(path, None)
+from lib import functions
+
+def main():
+    functions.touch("test.txt")
+    print("test")
+
+
+main()
