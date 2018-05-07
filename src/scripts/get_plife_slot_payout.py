@@ -67,6 +67,11 @@ def geSlotData(target_days):
         target_html = requests.get(target_url, headers=HEADERS).text
         root = lxml.html.fromstring(target_html)
 
+        # 機種名取得
+        lot_name = ""
+        if root.cssselect('#model_nm')[0].text is not None:
+            lot_name = root.cssselect('#model_nm')[0].text
+
         # payoutの取得
         payout = ""
         if root.cssselect('#chart.data tbody td:last-child')[0].text is not None:
@@ -82,18 +87,21 @@ def geSlotData(target_days):
         if root.cssselect('.score-large .big')[0].text is not None:
             big = root.cssselect('.score-large .big')[0].text
 
+        # RBの取得
         reg = ""
         if root.cssselect('.score-large .reg')[0].text is not None:
             reg = root.cssselect('.score-large .reg')[0].text
 
-        print("No:" + str(i) + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
+        print("No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
 
         # 最終payout保存
         slots_payout[i] = {
+            'lot_no': i,
+            'lot_name': lot_name,
             'payout': payout,
             'rotation': rotation,
             'big': big,
-            'reg': reg
+            'reg': reg,
         }
 
         # 負荷かけないようにsleepいれる
@@ -111,15 +119,15 @@ def output(target_day, slots_payout):
 
     totalPayout = 0
     totalRotation = 0
-    f = open(filepath, 'w')
+    f = open(filepath, 'w', encoding='utf-8')
 
     # outout header
-    f.write("%s,%s,%s,%s,%s\n" % ('No', 'Payout', 'Rotation', 'Big', 'Reg'))
+    f.write("%s,%s,%s,%s,%s,%s\n" % ('No', 'lotName', 'Payout', 'Rotation', 'Big', 'Reg'))
 
     # output contents
     for k, v in slots_payout.items():
         # 一行出力
-        f.write("%d,%s,%s,%s,%s\n" % (k, str(v['payout']), str(v['rotation']), str(v['big']), str(v['reg'])))
+        f.write("%d,%s,%s,%s,%s,%s\n" % (k, str(v['lot_name']), str(v['payout']), str(v['rotation']), str(v['big']), str(v['reg'])))
 
         # 店舗の全体の差枚数を求める
         if v['payout'][0] == '-' and v['payout'][1:].isdigit() or v['payout'].isdigit():
@@ -130,7 +138,7 @@ def output(target_day, slots_payout):
             totalRotation = totalRotation + int(v['rotation'])
 
     print(totalPayout)
-    f.write("%s,%s,%s,-,-\n" % ('total', str(totalPayout), str(totalRotation)))
+    f.write("%s,-,%s,%s,-,-\n" % ('total', str(totalPayout), str(totalRotation)))
 
     f.close()
 

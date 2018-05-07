@@ -2,15 +2,17 @@
 
 from bottle import route, run, template, static_file
 import os
+import sys
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from lib import functions
 
 @route('/')
 def index(name='This is test by takako'):
-    targetdir='../../data/2018/'
-    files = os.listdir(targetdir)
-    print("test")
+    slots_payout_data = functions.readingSlotData()
+    print(slots_payout_data )
 
-    return template('index', name=name)
+    return template('index', {'slots_payout_data':slots_payout_data, 'count':5})
 
 
 @route('/count')
