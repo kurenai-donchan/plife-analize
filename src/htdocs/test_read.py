@@ -14,6 +14,14 @@ def main():
     slots_payout_data = readingSlotData()
     json_str = json.dumps(slots_payout_data, indent=4, sort_keys=True)
 
+    for key, value in slots_payout_data.items():
+        print(key + ':')
+        print(value['4001'])
+
+        # for key2, value2 in value.items():
+        #     print(value2)
+
+
 
 def readingSlotData():
     slots_payout_data = {}

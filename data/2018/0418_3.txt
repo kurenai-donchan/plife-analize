@@ -1,4 +1,4 @@
-Lotno,Payout,Rotation,Big,Reg
+No,Payout,Rotation,Big,Reg
 4001,-1870,1574,3,-
 4002,3315,1983,14,-
 4003,-23,962,1,-
