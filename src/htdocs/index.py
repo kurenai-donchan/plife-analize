@@ -10,7 +10,7 @@ from lib import functions
 @route('/')
 def index(name='This is test by takako'):
     slots_payout_data = functions.readingSlotData()
-    print(slots_payout_data )
+    # print(slots_payout_data )
 
     return template('index', {'slots_payout_data':slots_payout_data, 'count':5})
 

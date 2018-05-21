@@ -18,6 +18,9 @@ def readingSlotData(YEAR='2018'):
     target_dir = '../../data/' + YEAR + '/'
     files = os.listdir(target_dir)
 
+    # 逆順
+    files.reverse()
+
     for file in files:
         # 日付抽出(Ymd)
         date = re.search('[0-9]{4}', file)
@@ -55,5 +58,7 @@ def readingSlotData(YEAR='2018'):
                       "Reg": Reg
                       }}
             )
+        csv_file.close()
+
 
     return slots_payout_data

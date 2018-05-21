@@ -22,7 +22,7 @@
 <main role="main" class="container">
     <input class="form-control" id="myInput" type="text" placeholder="Search..">
     <br>
-    <div class="wrapper">
+    <div class="table-responsive">
     <table id="plife-data" class="table table-bordered table-striped">
         <colgroup class="">
         <% for i in range(4001, int(4267)): %>
@@ -87,9 +87,7 @@
             });
         });
     });
-    $('#plife-data').floatThead({
-        position: 'fixed'
-    });
+
 </script>
 </body>
 </html>
