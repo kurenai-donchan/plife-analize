@@ -45,7 +45,7 @@ import datetime
         <%  for key, value in slots_payout_data.items():%>
         <%  date = datetime.datetime.strptime(key, '%Y%m%d') %>
         <%
-            color = ''
+            color = 'white'
             if(date.weekday()==5):
                 color = 'lightblue'
             elif(date.weekday()==6):
