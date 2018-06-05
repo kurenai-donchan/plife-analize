@@ -12,22 +12,46 @@ def touch(path):
     with open(path, 'a'):
         os.utime(path, None)
 
-
-def readingSlotData(YEAR='2018'):
+def getSlotFileList(YEAR='2018'):
     slots_payout_data = {}
     target_dir = '../../data/' + YEAR + '/'
-    files = os.listdir(target_dir)
 
-    # 逆順
+    # 読み込み
+    files = os.listdir(target_dir)
     files.reverse()
 
-    for file in files:
-        # 日付抽出(Ymd)
-        date = re.search('[0-9]{4}', file)
-        date = YEAR + date.group()
+    slotFiles = []
+    # directory loop
+    for name in files:
+        # directory loop2
+        if os.path.isdir(target_dir+name):
+            dir2 = os.listdir(target_dir+name)
+            dir2.reverse()
+            for name2 in dir2:
+                slotFiles.append(target_dir+name+'/'+name2)
 
-        # file読み込み
-        filepath = target_dir + file
+    return slotFiles
+
+
+
+def readingSlotData(YEAR='2018'):
+    # 初期化
+    slots_payout_data = {}
+    payout = {}
+
+    # 逆順
+    files = getSlotFileList(YEAR)
+
+    for filepath in files:
+
+        # print(file)
+        # # 日付抽出(Ymd)
+        date = re.search('([0-9]{4})_', filepath)
+        date = YEAR + date.group(1)
+
+        #
+        # # file読み込み
+        # filepath = target_dir + file
         csv_file = open(filepath, "r", encoding="utf-8", errors="", newline="")
         # リスト形式
         # f = csv.reader(csv_file, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
@@ -38,9 +62,11 @@ def readingSlotData(YEAR='2018'):
         totalrows = len(rows)
 
         slots_payout_data[date] = {}
+        payout[date] = {}
         for i, row in enumerate(rows):
 
             if (i + 1 == totalrows):
+                payout[date] = row
                 continue
 
             No = row.get("No")
@@ -60,5 +86,5 @@ def readingSlotData(YEAR='2018'):
             )
         csv_file.close()
 
+    return [slots_payout_data, payout]
 
-    return slots_payout_data

@@ -9,10 +9,14 @@ from lib import functions
 
 @route('/')
 def index(name='This is test by takako'):
-    slots_payout_data = functions.readingSlotData()
+    slots_data = functions.readingSlotData()
+    slots_payout_data = slots_data[0]
+    slots_payout_all = slots_data[1]
     # print(slots_payout_data )
 
-    return template('index', {'slots_payout_data':slots_payout_data, 'count':5})
+    print(slots_payout_all)
+
+    return template('index', {'slots_payout_data':slots_payout_data, 'slots_payout_all':slots_payout_all})
 
 
 @route('/count')

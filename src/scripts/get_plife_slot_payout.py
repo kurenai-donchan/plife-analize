@@ -5,6 +5,7 @@
 # ----------------------------------------------
 
 import datetime
+import os
 import random
 import sys
 import time
@@ -114,8 +115,13 @@ def geSlotData(target_days):
 
 # fileに出力
 def output(target_day, slots_payout):
-    # file open date/yyyy/mmdd.txt
-    filepath = '../../data/' + target_day.strftime("%Y/%m%d_%w.txt")
+    # file open date/yyyy/mm/mmdd_w.txt
+    dirpath = '../../data/' + target_day.strftime("%Y/%m")
+    filename = target_day.strftime("%m%d_%w.txt")
+    filepath = dirpath + '/' + filename
+
+    # dir生成
+    os.makedirs(dirpath, 777, True)
 
     totalPayout = 0
     totalRotation = 0

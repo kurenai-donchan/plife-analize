@@ -34,6 +34,7 @@ import datetime
         <thead style="background-color: white;">
         <tr>
             <th>XXXXXX</th>
+            <th>Total<br />Payout</th>
             <% for i in range(4001, int(4267)): %>
             <th>{{i}}<div style="display: none">{{slots_payout_data[sorted(slots_payout_data.keys())[len(slots_payout_data.keys()) - 1]][str(i)]['lotName']}}</div></th>
             <% end %>
@@ -45,25 +46,25 @@ import datetime
         <%  for key, value in slots_payout_data.items():%>
         <%  date = datetime.datetime.strptime(key, '%Y%m%d') %>
         <%
-            color = 'white'
+            week_color = 'white'
             if(date.weekday()==5):
-                color = 'lightblue'
+        week_color = 'lightblue'
             elif(date.weekday()==6):
-                color = 'lightpink'
+        week_color = 'lightpink'
             end
         %>
-
-            <tr style="background-color:{{color}}">
+            <tr style="background-color:{{week_color}}">
                 <td style="white-space: nowrap;">{{ date.strftime('%Y/%m/%d') }}({{ weekdays[date.weekday()] }})</td>
-                <% for i in range(4001, int(4267)): %>
-                    <% if (int(value[str(i)]['Payout']) >= 3000):
-                        color = 'blue'
+                <td>{{ slots_payout_all[date.strftime('%Y%m%d')]['Payout'] }}</td>
+                <% for i in range(4001, int(4267)):
+                    payout_color = ''
+                    if (int(value[str(i)]['Payout']) >= 3000):
+                        payout_color = 'blue'
                     elif(int(value[str(i)]['Payout']) <= -3000):
-                        color = 'red'
-                    else:
-                        color = ''
-                    end %>
-                    <td style="color: {{color}} " title="{{ value[str(i)]['lotName'] }}:{{ key }}">
+                        payout_color = 'red'
+                    end
+                %>
+                    <td style="color: {{payout_color}} " title="{{ value[str(i)]['lotName'] }}:{{ key }}">
                         {{ value[str(i)]['Payout'] }}
                         <div style="display: none">
                             <p>{{ value[str(i)]['lotName'] }}</p>
