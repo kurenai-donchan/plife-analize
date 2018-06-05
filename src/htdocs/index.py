@@ -14,8 +14,6 @@ def index(name='This is test by takako'):
     slots_payout_all = slots_data[1]
     # print(slots_payout_data )
 
-    print(slots_payout_all)
-
     return template('index', {'slots_payout_data':slots_payout_data, 'slots_payout_all':slots_payout_all})
 
 

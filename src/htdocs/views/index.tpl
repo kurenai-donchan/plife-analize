@@ -1,8 +1,7 @@
 <%
 import datetime
 %>
-<!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -26,17 +25,19 @@ import datetime
     <input class="form-control" id="myInput" type="text" placeholder="Search..">
     <br>
     <div class="table-responsive">
-    <table id="plife-data" class="table table-bordered table-striped">
+    <table id="plife-data" class="table table-bordered">
+        <colgroup class="">
         <colgroup class="">
         <% for i in range(4001, int(4267)): %>
         <colgroup class="{{slots_payout_data[sorted(slots_payout_data.keys())[len(slots_payout_data.keys()) - 1]][str(i)]['lotName']}}">
-            <% end %>
+        <% end %>
+
         <thead style="background-color: white;">
         <tr>
             <th>XXXXXX</th>
             <th>Total<br />Payout</th>
             <% for i in range(4001, int(4267)): %>
-            <th>{{i}}<div style="display: none">{{slots_payout_data[sorted(slots_payout_data.keys())[len(slots_payout_data.keys()) - 1]][str(i)]['lotName']}}</div></th>
+            <th>{{i}}</th>
             <% end %>
         </tr>
 
@@ -46,7 +47,7 @@ import datetime
         <%  for key, value in slots_payout_data.items():%>
         <%  date = datetime.datetime.strptime(key, '%Y%m%d') %>
         <%
-            week_color = 'white'
+            week_color = ''
             if(date.weekday()==5):
         week_color = 'lightblue'
             elif(date.weekday()==6):
@@ -91,8 +92,10 @@ import datetime
     $(document).ready(function(){
         $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
+            console.log(value)
             $("#plife-data colgroup").filter(function() {
                 var lotName = $(this).attr('class').toLowerCase();
+                console.log(lotName)
                 if(lotName.indexOf(value) > -1){
                     $(this).css('background-color', '#ffffe0');
                 } else {
