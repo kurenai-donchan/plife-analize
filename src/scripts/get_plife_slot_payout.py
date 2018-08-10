@@ -5,10 +5,12 @@
 # ----------------------------------------------
 
 import datetime
+import json
 import os
 import random
 import sys
 import time
+from collections import OrderedDict
 
 import lxml.html
 import requests
@@ -28,10 +30,6 @@ HEADERS = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) 
 
 
 def main():
-    # 今日の日付
-    today = datetime.datetime.today()
-
-    target_day = None
     args = sys.argv
     if len(args) == 1:
         # デフォルトの対象日付(昨日)
@@ -42,11 +40,8 @@ def main():
 
     print(target_day.strftime("%Y-%m-%d %H:%M:%S"))
 
-    # 何日前か？の算出
-    target_days = (today - target_day).days
-
     # data 取得
-    slots_payout = geSlotData(target_days)
+    slots_payout = geSlotData(target_day)
 
     # File 出力
     output(target_day, slots_payout)
@@ -55,15 +50,23 @@ def main():
 
 
 # slot payoutデータ取得
-def geSlotData(target_days):
+# 取得対象の日付
+def geSlotData(target_day):
+    # 日本語の曜日一覧
+    day_of_week_list = ["月", "火", "水", "木", "金", "土", "日"]
+
+    # 今日のから何日前か？の算出
+    today = datetime.datetime.today()
+    before_day = (today - target_day).days
+
     # data 取得
-    slots_payout = {}
+    slots_payout = OrderedDict()
     for i in range(SLOT_NO_START, SLOT_NO_END + 1):
         if i not in slots_payout:
-            slots_payout[i] = []
+            slots_payout[i] = OrderedDict()
 
-        target_url = BASE_URL % (target_days, i)
-
+        # 対象のURL算出
+        target_url = BASE_URL % (before_day, i)
         print("get url:" + target_url)
         target_html = requests.get(target_url, headers=HEADERS).text
         root = lxml.html.fromstring(target_html)
@@ -93,21 +96,23 @@ def geSlotData(target_days):
         if root.cssselect('.score-large .reg')[0].text is not None:
             reg = root.cssselect('.score-large .reg')[0].text
 
+        # LOG
         print("No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
 
         # 最終payout保存
-        slots_payout[i] = {
-            'lot_no': i,
-            'lot_name': lot_name,
-            'payout': payout,
-            'rotation': rotation,
-            'big': big,
-            'reg': reg,
-        }
+        slots_payout[i] = OrderedDict([
+            ("lot_no", i),
+            ("lot_name", lot_name),
+            ("payout", payout),
+            ("rotation", rotation),
+            ("big", big),
+            ("reg", reg),
+            ("date", target_day.strftime("%Y-%m-%d")),
+            ("day_of_week", day_of_week_list[target_day.weekday()])
+        ]);
 
         # 負荷かけないようにsleepいれる
         sleep_time = random.uniform(0, SLEEP_TIME_SECOND)
-        # print('sleep:'+str(sleep_time))
         time.sleep(sleep_time)
 
     return slots_payout
@@ -115,9 +120,9 @@ def geSlotData(target_days):
 
 # fileに出力
 def output(target_day, slots_payout):
-    # file open date/yyyy/mm/mmdd_w.txt
+    # file open date/yyyy/mm/mmdd_w.json
     dirpath = '../../data/' + target_day.strftime("%Y/%m")
-    filename = target_day.strftime("%m%d_%w.txt")
+    filename = target_day.strftime("%m%d_%w.json")
     filepath = dirpath + '/' + filename
 
     # dir生成
@@ -127,24 +132,9 @@ def output(target_day, slots_payout):
     totalRotation = 0
     f = open(filepath, 'w', encoding='utf-8')
 
-    # outout header
-    f.write("%s,%s,%s,%s,%s,%s\n" % ('No', 'lotName', 'Payout', 'Rotation', 'Big', 'Reg'))
+    # TODO Total PAYOUT算出
 
-    # output contents
-    for k, v in slots_payout.items():
-        # 一行出力
-        f.write("%d,%s,%s,%s,%s,%s\n" % (k, str(v['lot_name']), str(v['payout']), str(v['rotation']), str(v['big']), str(v['reg'])))
-
-        # 店舗の全体の差枚数を求める
-        if v['payout'][0] == '-' and v['payout'][1:].isdigit() or v['payout'].isdigit():
-            totalPayout = totalPayout + int(v['payout'])
-
-        # 店舗総回転数を出す(稼働率)
-        if (v['rotation'].isdigit()):
-            totalRotation = totalRotation + int(v['rotation'])
-
-    print(totalPayout)
-    f.write("%s,-,%s,%s,-,-\n" % ('total', str(totalPayout), str(totalRotation)))
+    json.dump(slots_payout, f, ensure_ascii=False, indent=4, sort_keys=None, separators=(',', ': '))
 
     f.close()
 
