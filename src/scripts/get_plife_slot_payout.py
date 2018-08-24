@@ -86,15 +86,30 @@ def geSlotData(target_day):
         if root.cssselect('.score-large .middle')[0].text is not None:
             rotation = root.cssselect('.score-large .middle')[0].text
 
-        # BBの取得
+        # ボーナス回数
+        bonus = ""
+        if root.cssselect('.score-large .large')[0].text is not None:
+            bonus = root.cssselect('.score-large .large')[0].text
+
+        # BB回数の取得
         big = ""
         if root.cssselect('.score-large .big')[0].text is not None:
             big = root.cssselect('.score-large .big')[0].text
 
-        # RBの取得
+        # RB回数の取得
         reg = ""
         if root.cssselect('.score-large .reg')[0].text is not None:
             reg = root.cssselect('.score-large .reg')[0].text
+
+        # BB確率の取得
+        big_probability = ""
+        if root.cssselect('.score-middle .middle')[0].text is not None:
+            big_probability = root.cssselect('.score-middle .middle')[0].text
+
+        # RB確率の取得
+        reg_probability = ""
+        if root.cssselect('.score-large .middle')[1].text is not None:
+            reg_probability = root.cssselect('.score-large .middle')[1].text
 
         # LOG
         print("No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
@@ -105,8 +120,11 @@ def geSlotData(target_day):
             ("lot_name", lot_name),
             ("payout", payout),
             ("rotation", rotation),
+            ("bonus", bonus),
             ("big", big),
             ("reg", reg),
+            ("big_probability", big_probability),
+            ("reg_probability", reg_probability),
             ("date", target_day.strftime("%Y-%m-%d")),
             ("day_of_week", day_of_week_list[target_day.weekday()])
         ]);
