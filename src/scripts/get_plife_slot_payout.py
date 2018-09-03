@@ -60,10 +60,13 @@ def geSlotData(target_day):
     before_day = (today - target_day).days
 
     # data 取得
-    slots_payout = OrderedDict()
+    win_information = OrderedDict() # 大当たり情報
+    total_payout = 0 # 店舗総ペイアウト
+    total_rotation = 0 # 店舗総回転数
     for i in range(SLOT_NO_START, SLOT_NO_END + 1):
-        if i not in slots_payout:
-            slots_payout[i] = OrderedDict()
+        if i not in win_information:
+            # 初期化
+            win_information[i] = OrderedDict()
 
         # 対象のURL算出
         target_url = BASE_URL % (before_day, i)
@@ -108,14 +111,16 @@ def geSlotData(target_day):
 
         # RB確率の取得
         reg_probability = ""
-        if root.cssselect('.score-large .middle')[1].text is not None:
-            reg_probability = root.cssselect('.score-large .middle')[1].text
+        if root.cssselect('.score-middle .middle')[1].text is not None:
+            reg_probability = root.cssselect('.score-middle .middle')[1].text
 
-        # LOG
-        print("No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
+        # トータル確率の取得
+        total_probability = ""
+        if root.cssselect('.score-middle .middle')[2].text is not None:
+            total_probability = root.cssselect('.score-middle .middle')[2].text
 
         # 最終payout保存
-        slots_payout[i] = OrderedDict([
+        win_information[i] = OrderedDict([
             ("lot_no", i),
             ("lot_name", lot_name),
             ("payout", payout),
@@ -125,35 +130,48 @@ def geSlotData(target_day):
             ("reg", reg),
             ("big_probability", big_probability),
             ("reg_probability", reg_probability),
+            ("total_probability", total_probability),
             ("date", target_day.strftime("%Y-%m-%d")),
             ("day_of_week", day_of_week_list[target_day.weekday()])
         ]);
+
+        # LOG
+        print("No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
+
+        # 店舗の全体の差枚数を求める
+        if payout[0] == '-' and payout[1:].isdigit() or payout.isdigit():
+            total_payout = total_payout + int(payout)
+
+        # 店舗総回転数を出す(稼働率)
+        if (rotation.isdigit()):
+            total_rotation = total_rotation + int(rotation)
 
         # 負荷かけないようにsleepいれる
         sleep_time = random.uniform(0, SLEEP_TIME_SECOND)
         time.sleep(sleep_time)
 
-    return slots_payout
+    result = {
+        "total_payout": total_payout,
+        "total_rotation": total_rotation,
+        "win_information": win_information
+    }
+
+    return result
 
 
 # fileに出力
 def output(target_day, slots_payout):
     # file open date/yyyy/mm/mmdd_w.json
-    dirpath = '../../data/' + target_day.strftime("%Y/%m")
-    filename = target_day.strftime("%m%d_%w.json")
-    filepath = dirpath + '/' + filename
+    dir_path = '../../data/' + target_day.strftime("%Y/%m")
+    file_name = target_day.strftime("%m%d_%w.json")
+    file_path = dir_path + '/' + file_name
 
     # dir生成
-    os.makedirs(dirpath, 777, True)
+    os.makedirs(dir_path, 777, True)
 
-    totalPayout = 0
-    totalRotation = 0
-    f = open(filepath, 'w', encoding='utf-8')
-
-    # TODO Total PAYOUT算出
-
+    # JSON出力
+    f = open(file_path, 'w', encoding='utf-8')
     json.dump(slots_payout, f, ensure_ascii=False, indent=4, sort_keys=None, separators=(',', ': '))
-
     f.close()
 
 

@@ -1,0 +1,34 @@
+{
+    "total_payout": -233,
+    "total_rotation": 2892,
+    "slots_payout": {
+        "4001": {
+            "lot_no": 4001,
+            "lot_name": "ｱﾅｻﾞｰｺﾞｯﾄﾞﾊｰﾃﾞｽ-奪われた",
+            "payout": "-233",
+            "rotation": "2892",
+            "bonus": "6",
+            "big": "6",
+            "reg": "-",
+            "big_probability": "1/482",
+            "reg_probability": "1/482",
+            "total_probability": "-",
+            "date": "2018-09-02",
+            "day_of_week": "日"
+        },
+        "4002": {
+            "lot_no": 4002,
+            "lot_name": "ｱﾅｻﾞｰｺﾞｯﾄﾞﾊｰﾃﾞｽ-奪われた",
+            "payout": "0",
+            "rotation": "-",
+            "bonus": "-",
+            "big": "-",
+            "reg": "-",
+            "big_probability": "-",
+            "reg_probability": "-",
+            "total_probability": "-",
+            "date": "2018-09-02",
+            "day_of_week": "日"
+        }
+    }
+}
