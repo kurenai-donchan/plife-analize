@@ -21,7 +21,7 @@ SLOT_NO_START = 4001
 SLOT_NO_END = 4266
 
 # Sleep timeの秒数(この秒数以内でらんだむ時間)
-SLEEP_TIME_SECOND = 1
+SLEEP_TIME_SECOND = 3
 
 # 取得先URL
 BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
@@ -60,9 +60,9 @@ def geSlotData(target_day):
     before_day = (today - target_day).days
 
     # data 取得
-    win_information = OrderedDict() # 大当たり情報
-    total_payout = 0 # 店舗総ペイアウト
-    total_rotation = 0 # 店舗総回転数
+    win_information = OrderedDict()  # 大当たり情報
+    total_payout = 0  # 店舗総ペイアウト
+    total_rotation = 0  # 店舗総回転数
     for i in range(SLOT_NO_START, SLOT_NO_END + 1):
         if i not in win_information:
             # 初期化
@@ -136,7 +136,7 @@ def geSlotData(target_day):
         ]);
 
         # LOG
-        print("No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
+        print(" - No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
 
         # 店舗の全体の差枚数を求める
         if payout[0] == '-' and payout[1:].isdigit() or payout.isdigit():
@@ -180,12 +180,16 @@ def output(target_day, slots_payout):
 # ----------------------------------------
 if __name__ == "__main__":
     # 実行時間計測
-    start = time.time()
+    try:
+        start = time.time()
 
-    main()
+        main()
 
-    # 実行時間出力
-    elapsed_time = round(time.time() - start, 2)
-    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+        # 実行時間出力
+        elapsed_time = round(time.time() - start, 2)
+        print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+
+    except Exception as e:
+        print(e)
 
 sys.exit()

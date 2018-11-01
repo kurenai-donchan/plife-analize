@@ -39,14 +39,20 @@ def main():
         if args.day:
             day = int(args.day)
 
+        exec_cmds = []
         for i in range(1, day + 1):
             target_day = datetime.datetime.today() - datetime.timedelta(i)
             exec_cmd = "python %s %s" % (GET_PLIFE_SLOT_PAYOUT_SCRIPT, target_day.strftime("%Y-%m-%d"));
+            exec_cmds.append(exec_cmd)
+            print("============ CMD: " + exec_cmd + " ============")
+
+        for command in exec_cmds:
             if (args.test):
-                print("============ Exec CMD: " + exec_cmd + " ============")
-                subprocess.call(exec_cmd)
+                print("============ Exec CMD: " + command + " ============")
+                subprocess.call(command)
             else:
-                print("============ Test CMD: " + exec_cmd + " ============")
+                print("============ Test CMD: " + command + " ============")
+
     except:
         print("エラー")
 
@@ -55,13 +61,17 @@ def main():
 # main 処理実行
 # ----------------------------------------
 if __name__ == "__main__":
-    # 実行時間計測
-    start = time.time()
 
-    main()
+    try:
+        # 実行時間計測
 
-    # 実行時間出力
-    elapsed_time = round(time.time() - start, 2)
-    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+        main()
+
+        # 実行時間出力
+        elapsed_time = round(time.time() - start, 2)
+        print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
+
+    except Exception as e:
+        print(e)
 
 sys.exit()

@@ -8,8 +8,10 @@ import os.path
 import random
 import sys
 import time
+
 import lxml.html
 import requests
+
 
 def main():
     # 何日前から何日分取得するか
@@ -65,7 +67,7 @@ def getSlotInfo(target_day, target_lot_no):
     target_url = BASE_URL % (int(target_day), int(target_lot_no))
 
     print('target_lot_no:' + str(target_lot_no) + ' target_day:' + str(target_day))
-    print("get url:" + target_url)
+    print(" - get url:" + target_url)
 
     # データ取得
     target_html = requests.get(target_url, headers=HEADERS).text
@@ -95,6 +97,9 @@ def getSlotInfo(target_day, target_lot_no):
 # main 処理実行
 # ----------------------------------------
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
 
 sys.exit()
