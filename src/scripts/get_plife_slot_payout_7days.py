@@ -9,6 +9,8 @@ import subprocess
 import sys
 import time
 
+sys.stdout.flush()
+
 GET_PLIFE_SLOT_PAYOUT_SCRIPT = "get_plife_slot_payout.py"
 
 DEFAULT_DAY = 7
