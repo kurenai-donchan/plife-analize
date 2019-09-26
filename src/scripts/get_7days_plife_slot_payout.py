@@ -42,7 +42,7 @@ def main():
             day = int(args.day)
 
         exec_cmds = []
-        for i in range(1, day + 1):
+        for i in reversed(range(1, day + 1)):
             target_day = datetime.datetime.today() - datetime.timedelta(i)
             exec_cmd = "python %s %s" % (GET_PLIFE_SLOT_PAYOUT_SCRIPT, target_day.strftime("%Y-%m-%d"));
             exec_cmds.append(exec_cmd)
