@@ -21,7 +21,7 @@ SLOT_NO_START = 4001
 SLOT_NO_END = 4266
 
 # Sleep timeの秒数(この秒数以内でらんだむ時間)
-SLEEP_TIME_SECOND = 3
+SLEEP_TIME_SECOND = 5
 
 # 取得先URL
 BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
@@ -137,6 +137,7 @@ def geSlotData(target_day):
 
         # LOG
         print(" - No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
+
 
         # 店舗の全体の差枚数を求める
         if payout[0] == '-' and payout[1:].isdigit() or payout.isdigit():

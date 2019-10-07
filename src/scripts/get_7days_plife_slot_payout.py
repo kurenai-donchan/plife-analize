@@ -67,10 +67,11 @@ if __name__ == "__main__":
     try:
         # 実行時間計測
 
+        start_time = time.time()
         main()
 
         # 実行時間出力
-        elapsed_time = round(time.time() - start, 2)
+        elapsed_time = round(time.time() - start_time, 2)
         print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
 
     except Exception as e:
