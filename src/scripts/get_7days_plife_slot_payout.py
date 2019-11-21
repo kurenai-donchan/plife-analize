@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding:utf-8
 # ----------------------------------------------
 # 指定日付の台番ごとにデータを取得する
 # payoutを出力する
@@ -8,7 +8,8 @@ import datetime
 import subprocess
 import sys
 import time
-
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8') # UTF-8に
 sys.stdout.flush()
 
 GET_PLIFE_SLOT_PAYOUT_SCRIPT = "get_plife_slot_payout.py"

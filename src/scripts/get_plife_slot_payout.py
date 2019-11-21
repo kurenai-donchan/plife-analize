@@ -5,15 +5,15 @@
 # ----------------------------------------------
 
 import datetime
-import json
 import os
-import random
 import sys
 import time
-from collections import OrderedDict
 
+import json
 import lxml.html
+import random
 import requests
+from collections import OrderedDict
 
 # 対象の大番号の範囲
 # SLOT NO 4001 - 4266
@@ -26,7 +26,8 @@ SLEEP_TIME_SECOND = 5
 # 取得先URL
 BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
 # SmartPhoneでの取得しかできない
-HEADERS = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
 
 def main():
@@ -136,8 +137,8 @@ def geSlotData(target_day):
         ]);
 
         # LOG
-        print(" - No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation, ",BB:" + big + ",RB:" + reg)
-
+        print(" - No:" + str(i) + ",lotName:" + lot_name + ",Payout:" + payout + ',Rotation:' + rotation,
+              ",BB:" + big + ",RB:" + reg)
 
         # 店舗の全体の差枚数を求める
         if payout[0] == '-' and payout[1:].isdigit() or payout.isdigit():

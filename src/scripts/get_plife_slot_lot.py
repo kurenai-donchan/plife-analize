@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# coding:utf-8
 # ----------------------------------------------
 # 指定台番の日付でデータを取得する
 # ----------------------------------------------
@@ -11,6 +11,10 @@ import time
 
 import lxml.html
 import requests
+
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')  # UTF-8に
 
 
 def main():
@@ -48,7 +52,9 @@ def main():
 
             slotInfo = getSlotInfo(i, target_lot_no)
 
-            f.write("%s,%s,%s,%s,%s\n" % (target_lot_no, target_day.strftime("%Y-%m-%d"), target_day.strftime("%w"), slotInfo['payout'], slotInfo['totalRotation']))
+            f.write("%s,%s,%s,%s,%s\n" % (
+                target_lot_no, target_day.strftime("%Y-%m-%d"), target_day.strftime("%w"), slotInfo['payout'],
+                slotInfo['totalRotation']))
 
             # 負荷かけないようにsleepいれる
             sleep_time = random.uniform(0, 2)
@@ -62,7 +68,8 @@ def main():
 def getSlotInfo(target_day, target_lot_no):
     # 取得元URL設定
     BASE_URL = 'http://api.p-ken.jp/p-arkst/bonusinfo/detailToShrRec?day=%d&lot_no=%d'
-    HEADERS = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
+    HEADERS = {
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'}
 
     target_url = BASE_URL % (int(target_day), int(target_lot_no))
 
