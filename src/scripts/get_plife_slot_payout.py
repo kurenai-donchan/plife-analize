@@ -5,15 +5,15 @@
 # ----------------------------------------------
 
 import datetime
+import json
 import os
+import random
 import sys
 import time
-
-import json
-import lxml.html
-import random
-import requests
 from collections import OrderedDict
+
+import lxml.html
+import requests
 
 # 対象の大番号の範囲
 # SLOT NO 4001 - 4266
